@@ -11,7 +11,12 @@ func (f *fooHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(w, "Hello Foo!")
 }
 func barHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprint(w, "Hello Bar!")
+	name := r.URL.Query().Get("name")
+	if name == "" {
+		name = "World"
+	}
+
+	fmt.Fprintf(w, "Hello %s!", name)
 }
 
 func main() {
