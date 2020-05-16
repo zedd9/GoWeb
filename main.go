@@ -1,14 +1,36 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
+	"time"
 )
+
+type User struct {
+	FirstName string    `json:"first_name"`
+	LastName  string    `json:"last_name"`
+	Email     string    `json:"email"`
+	CreateAt  time.Time `json:"created_at"`
+}
 
 type fooHandler struct{}
 
 func (f *fooHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprint(w, "Hello Foo!")
+	user := new(User)
+	err := json.NewDecoder(r.Body).Decode(user)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		fmt.Fprint(w, "Bad Request: ", err)
+		return
+	}
+
+	user.CreateAt = time.Now()
+
+	data, err := json.Marshal(user)
+	w.Header().Add("content-type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	fmt.Fprintf(w, string(data))
 }
 func barHandler(w http.ResponseWriter, r *http.Request) {
 	name := r.URL.Query().Get("name")
