@@ -83,4 +83,5 @@ func TestFooHandler_WithJson(t *testing.T) {
 	assert.Nil(err)
 	assert.Equal("tucker", user.FirstName)
 	assert.Equal("kim", user.LastName)
+
 }

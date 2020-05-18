@@ -3,7 +3,7 @@ package main
 import (
 	"net/http"
 
-	"github.com/zedd9/GoWeb/myapp"
+	"github.com/zedd9/GoWeb/web3/myapp"
 )
 
 func main() {
