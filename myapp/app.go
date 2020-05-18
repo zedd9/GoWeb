@@ -33,7 +33,7 @@ func (f *fooHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	data, err := json.Marshal(user)
 	w.Header().Add("content-type", "application/json")
-	w.WriteHeader(http.StatusOK)
+	w.WriteHeader(http.StatusCreated)
 	fmt.Fprintf(w, string(data))
 }
 func barHandler(w http.ResponseWriter, r *http.Request) {
