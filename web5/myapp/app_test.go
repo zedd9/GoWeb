@@ -85,3 +85,35 @@ func TestCreatUser(t *testing.T) {
 	assert.Equal(user.ID, user2.ID)
 	assert.Equal(user.FirstName, user2.FirstName)
 }
+
+func TestDeleteUser(t *testing.T) {
+	assert := assert.New(t)
+
+	ts := httptest.NewServer((NewHandler()))
+	defer ts.Close()
+
+	req, _ := http.NewRequest("DELETE", ts.URL+"/users/1", nil)
+	resp, err := http.DefaultClient.Do(req)
+	assert.NoError(err)
+	assert.Equal(http.StatusOK, resp.StatusCode)
+	data, _ := ioutil.ReadAll(resp.Body)
+	assert.Contains(string(data), "No User Id:1")
+
+	resp, err = http.Post(ts.URL+"/users", "application/json",
+		strings.NewReader(`{"first_name":"zedd", "last_name":"shin", "email":"shu2468@naver.com"}`))
+
+	assert.NoError(err)
+	assert.Equal(http.StatusCreated, resp.StatusCode)
+
+	user := new(User)
+	err = json.NewDecoder(resp.Body).Decode(user)
+	assert.NoError(err)
+	assert.NotEqual(0, user.ID)
+
+	req, _ = http.NewRequest("DELETE", ts.URL+"/users/1", nil)
+	resp, err = http.DefaultClient.Do(req)
+	assert.NoError(err)
+	assert.Equal(http.StatusOK, resp.StatusCode)
+	data, _ = ioutil.ReadAll(resp.Body)
+	assert.Contains(string(data), "Deleted User Id:1")
+}
