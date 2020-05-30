@@ -1,9 +1,9 @@
 package main
 
 import (
+	"log"
 	"net/http"
 
-	"github.com/urfave/negroni"
 	"github.com/zedd9/GoWeb/web16/app"
 )
 
@@ -11,8 +11,9 @@ func main() {
 	m := app.MakeNewHandler("./test.db")
 	defer m.Close()
 
-	n := negroni.Classic()
-	n.UseHandler(m)
-
-	http.ListenAndServe(":3000", n)
+	log.Println("Started App")
+	err := http.ListenAndServe(":3000", m)
+	if err != nil {
+		panic(err)
+	}
 }
