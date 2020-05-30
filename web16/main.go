@@ -8,9 +8,11 @@ import (
 )
 
 func main() {
-	m := app.MakeNewHandler()
+	m := app.MakeNewHandler("./test.db")
+	defer m.Close()
+
 	n := negroni.Classic()
 	n.UseHandler(m)
 
-	http.ListenAndServe(":3000", n)	
+	http.ListenAndServe(":3000", n)
 }
